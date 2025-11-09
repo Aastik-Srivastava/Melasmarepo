@@ -1,0 +1,1 @@
+web: gunicorn melascan.wsgi:application --log-file -

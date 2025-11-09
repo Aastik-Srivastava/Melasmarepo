@@ -231,7 +231,7 @@ def detect_view(request):
             
             # For classification mode, generate PDF report
             if mode == 'classify':
-                pdf_file = generate_pdf_report(report, django_user)
+                pdf_file = generate_pdf_report(report, django_user, prediction_result=prediction_result)
                 report.report_pdf = pdf_file
                 report.save()
                 messages.success(request, f'Classification complete! Result: {prediction_result["result"]} (Confidence: {prediction_result["confidence"]:.1f}%)')
@@ -253,7 +253,9 @@ def detect_view(request):
                 'mode': mode,
                 'uploaded_image_url': uploaded_image_url,
                 'overlay_url': overlay_url,
-                'prediction_result': prediction_result
+                'prediction_result': prediction_result,
+                # Provide the report id so the template can show a download button only after classification
+                'report_id': report.id if mode == 'classify' else None,
             }
             return render(request, 'detection/detect.html', context)
     else:
