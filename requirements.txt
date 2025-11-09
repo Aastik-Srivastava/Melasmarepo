@@ -11,7 +11,7 @@ dj-database-url==2.1.0
 python-dotenv==1.0.0
 
 # Image Processing
-Pillow==10.0.1
+Pillow==11.0.0
 opencv-python-headless==4.8.0.76
 
 # ML/DL Libraries (CPU versions)
