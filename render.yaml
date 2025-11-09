@@ -4,13 +4,18 @@ services:
     name: melascan
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    buildCommand: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
     startCommand: gunicorn melascan.wsgi:application
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.12
+        value: 3.13.4
       - key: PYTHONPATH
         value: .
+      - key: PIP_DISABLE_PIP_VERSION_CHECK
+        value: "1"
     autoDeploy: false
     startCommand: gunicorn melascan.wsgi:application
     envVars:
