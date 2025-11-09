@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load percentage %}
+
+{% block title %}Dashboard - MelaScan{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">Melasma Detection Web</h1>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm">Welcome, {{ user_name|default:user_email }}</span>
+                    <a href="{% url 'logout' %}" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-6">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-purple-100 text-purple-700 rounded-lg font-semibold">
+                            <span>📊</span> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                            <span>👤</span> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'detect' %}" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                            <span>🔍</span> Start Detection
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Model in Use Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Model in Use</h3>
+                    <p class="text-2xl font-bold text-gray-900">
+                        {% if best_model %}
+                            {{ best_model.model_name }}
+                        {% else %}
+                            No Model Available
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Total Users Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Total Users</h3>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_users }}</p>
+                </div>
+
+                <!-- Benign Cases Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Benign Cases</h3>
+                    <p class="text-2xl font-bold text-gray-900">{{ benign_count }}</p>
+                </div>
+
+                <!-- Melasma Cases Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Melasma Cases</h3>
+                    <p class="text-2xl font-bold text-gray-900">{{ melasma_count }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Center Panel - Last Report -->
+                <div class="lg:col-span-2">
+                    {% if last_report %}
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Last Report Summary</h2>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Date:</span>
+                                    <span class="font-semibold">{{ last_report.date|date:"M d, Y" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Result:</span>
+                                    <span class="font-semibold {% if 'Melasma Detected' in last_report.result %}text-red-600{% else %}text-green-600{% endif %}">
+                                        {{ last_report.result }}
+                                    </span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Model Used:</span>
+                                    <span class="font-semibold">{{ last_report.model_used }}</span>
+                                </div>
+                                <div class="mt-4">
+                                    {% if last_report.report_pdf %}
+                                        <a href="{% url 'download_report' last_report.id %}" 
+                                           class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                                            Download PDF Report
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">⚠️</span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-red-800">No Test Done Yet</h3>
+                                    <p class="text-red-600">You haven't checked for Melasma yet! Click "Start Detection" to begin.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Right Panel - Model Metrics -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Model Metrics</h2>
+                    {% if model_metrics %}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-2 px-2 font-semibold text-gray-700">Model</th>
+                                        <th class="text-center py-2 px-2 font-semibold text-gray-700">Acc</th>
+                                        <th class="text-center py-2 px-2 font-semibold text-gray-700">Prec</th>
+                                        <th class="text-center py-2 px-2 font-semibold text-gray-700">Rec</th>
+                                        <th class="text-center py-2 px-2 font-semibold text-gray-700">F1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for model in model_metrics %}
+                                        <tr class="border-b hover:bg-gray-50">
+                                            <td class="py-2 px-2 text-gray-900">{{ model.model_name }}</td>
+                                            <td class="py-2 px-2 text-center text-gray-700">{{ model.accuracy|percentage }}%</td>
+                                            <td class="py-2 px-2 text-center text-gray-700">{{ model.precision|percentage }}%</td>
+                                            <td class="py-2 px-2 text-center text-gray-700">{{ model.recall|percentage }}%</td>
+                                            <td class="py-2 px-2 text-center text-gray-700">{{ model.f1_score|percentage }}%</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 text-center py-4">No model metrics available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
