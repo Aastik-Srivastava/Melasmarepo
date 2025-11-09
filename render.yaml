@@ -3,7 +3,10 @@ services:
   - type: web
     name: melascan
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
     startCommand: gunicorn melascan.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
@@ -16,8 +19,14 @@ services:
         fromDatabase:
           name: melascan-db
           property: connectionString
+      - key: SUPABASE_URL
+        value: https://rxcakfbqzptpaxiyotwe.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4Y2FrZmJxenB0cGF4aXlvdHdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MTYyNzMsImV4cCI6MjA3Nzk5MjI3M30.cFSUlb4rzSSxksKpIxY7uXXZoWNP8l3_jFTmwclXmO4
       - key: PYTHON_VERSION
         value: 3.10.0
+      - key: DEBUG
+        value: "False"
 
   # Database
   - type: pserv
