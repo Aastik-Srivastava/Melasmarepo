@@ -2,17 +2,18 @@
 # exit on error
 set -o errexit
 
+# Print Python version
+python --version
+
 # Upgrade pip and install build tools
-pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade pip
+pip install --upgrade setuptools wheel
 
-# Install system dependencies
-apt-get update && apt-get install -y \
-    python3-dev \
-    build-essential \
-    libpq-dev
+# Clean pip cache
+pip cache purge
 
-# Install Python dependencies
-pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies with specific options
+pip install --no-cache-dir -r requirements.txt --use-pep517
 
 # Create necessary directories
 mkdir -p media/uploads

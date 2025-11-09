@@ -1,23 +1,26 @@
 # Core
 Django==4.2.7
 gunicorn==21.2.0
+whitenoise==6.5.0
 
 # Database
 psycopg2-binary==2.9.9
 dj-database-url==2.1.0
 
 # Image Processing
-Pillow==9.5.0  # Using an older, more compatible version
-opencv-python-headless==4.8.0.74
+--index-url https://pypi.org/simple
+--extra-index-url https://www.piwheels.org/simple
+Pillow==9.3.0
+opencv-python-headless==4.6.0.66
 
 # ML/DL Libraries
-tensorflow-cpu==2.13.0
---find-links https://download.pytorch.org/whl/torch_stable.html
-torch==2.0.1+cpu
-torchvision==0.15.2+cpu
-numpy==1.24.3
-pandas==2.0.3
-scikit-learn==1.3.0
+--find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+torch==1.13.1+cpu
+torchvision==0.14.1+cpu
+tensorflow-cpu==2.11.0
+numpy==1.23.5
+pandas==1.5.3
+scikit-learn==1.2.2
 
 # Report Generation
 reportlab==4.0.7
