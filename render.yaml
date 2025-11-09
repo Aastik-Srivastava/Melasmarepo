@@ -24,7 +24,7 @@ services:
       - key: SUPABASE_ANON_KEY
         value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4Y2FrZmJxenB0cGF4aXlvdHdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MTYyNzMsImV4cCI6MjA3Nzk5MjI3M30.cFSUlb4rzSSxksKpIxY7uXXZoWNP8l3_jFTmwclXmO4
       - key: PYTHON_VERSION
-        value: 3.10.0
+        value: 3.9.18
       - key: DEBUG
         value: "False"
 
