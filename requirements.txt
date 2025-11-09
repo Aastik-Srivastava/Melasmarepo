@@ -40,7 +40,7 @@ requests==2.31.0
 
 # Security & Environment
 python-dotenv==1.0.0
-whitenoise==6.6.0
+whitenoise
 django-cors-headers==4.3.1
 
 # Caching & Performance
