@@ -1,7 +1,7 @@
 # Core dependencies
-Django==5.0.1
+Django==4.2.9
 gunicorn==21.2.0
-whitenoise==6.6.0
+whitenoise==6.5.0
 
 # Database
 psycopg2-binary==2.9.9
@@ -11,24 +11,24 @@ dj-database-url==2.1.0
 python-dotenv==1.0.0
 
 # Image Processing
-Pillow==10.1.0
-opencv-python-headless==4.8.1.78
+Pillow==10.0.1
+opencv-python-headless==4.8.0.76
 
 # ML/DL Libraries (CPU versions)
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.1.2+cpu
-torchvision==0.16.2+cpu
-numpy>=1.26.0
-pandas>=2.1.4
-scikit-learn>=1.3.2
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
 
 # Deep Learning
-tensorflow-cpu>=2.15.0
+tensorflow-cpu==2.13.1
 
 # Additional Requirements
-typing-extensions>=4.9.0
-setuptools>=69.0.2
-wheel>=0.42.0
+typing-extensions==4.7.1
+setuptools==68.0.0
+wheel==0.41.0
 
 # Report Generation
 reportlab==4.0.7
