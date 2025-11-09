@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
-# exit on error
 set -o errexit
 
-# Print Python version
+echo "Python version:"
 python --version
 
-# Upgrade pip and install build tools
-python -m pip install --upgrade pip
-pip install --upgrade setuptools wheel
+echo "Installing dependencies..."
+pip install --no-cache-dir -r requirements.txt
 
-# Clean pip cache
-pip cache purge
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-# Install Python dependencies with specific options
-pip install --no-cache-dir -r requirements.txt --use-pep517
+echo "Running migrations..."
+python manage.py migrate
 
 # Create necessary directories
 mkdir -p media/uploads
