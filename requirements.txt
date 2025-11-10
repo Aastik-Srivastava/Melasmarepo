@@ -4,8 +4,7 @@ gunicorn==21.2.0
 whitenoise==6.5.0
 
 # Database
-psycopg2-binary==2.9.9
-dj-database-url==2.1.0
+mysqlclient==2.2.1
 
 # Security
 python-dotenv==1.0.0
