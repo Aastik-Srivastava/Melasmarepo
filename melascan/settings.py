@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-melascan-dev-key-change-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['aastiksrivastava.pythonanywhere.com']
+ALLOWED_HOSTS = ['aastiksrivastava.pythonanywhere.com','127.0.0.1']
 
 
 

@@ -43,8 +43,10 @@ def generate_pdf_report(report, user, prediction_result=None):
     
     # Create PDF document
     doc = SimpleDocTemplate(buffer, pagesize=letter, 
-                           rightMargin=72, leftMargin=72,
-                           topMargin=72, bottomMargin=18)
+                           rightMargin=60,  # Reduced from 72
+                           leftMargin=60,   # Reduced from 72
+                           topMargin=60,    # Reduced from 72
+                           bottomMargin=18)
     
     # Container for PDF elements
     elements = []
@@ -54,30 +56,30 @@ def generate_pdf_report(report, user, prediction_result=None):
     title_style = ParagraphStyle(
         'CustomTitle',
         parent=styles['Heading1'],
-        fontSize=24,
+        fontSize=20,  # Reduced from 24
         textColor=colors.HexColor('#6B46C1'),
-        spaceAfter=30,
+        spaceAfter=20,  # Reduced from 30
         alignment=TA_CENTER,
     )
     
     heading_style = ParagraphStyle(
         'CustomHeading',
         parent=styles['Heading2'],
-        fontSize=16,
+        fontSize=14,  # Reduced from 16
         textColor=colors.HexColor('#4C1D95'),
-        spaceAfter=12,
+        spaceAfter=8,  # Reduced from 12
     )
     
     normal_style = ParagraphStyle(
         'Normal',
         parent=styles['Normal'],
-        fontSize=11,
-        spaceAfter=12,
+        fontSize=10,  # Reduced from 11
+        spaceAfter=8,  # Reduced from 12
     )
     
     # Build PDF contents
     elements.append(Paragraph("MelaScan Report", title_style))
-    elements.append(Spacer(1, 0.2 * inch))
+    elements.append(Spacer(1, 0.15 * inch))  # Reduced from 0.2
 
     # Patient Information (Name, Gender, Date)
     elements.append(Paragraph("Patient Information", heading_style))
@@ -92,9 +94,9 @@ def generate_pdf_report(report, user, prediction_result=None):
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 11),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Reduced from 11
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),  # Reduced from 8
+        ('TOPPADDING', (0, 0), (-1, -1), 6),  # Reduced from 8
     ]))
     elements.append(patient_table)
     elements.append(Spacer(1, 0.15 * inch))
@@ -112,12 +114,12 @@ def generate_pdf_report(report, user, prediction_result=None):
     result_style = ParagraphStyle(
         'Result',
         parent=styles['Heading2'],
-        fontSize=14,
+        fontSize=12,  # Reduced from 14
         textColor=colors.black,
-        spaceAfter=12,
+        spaceAfter=8,  # Reduced from 12
     )
     elements.append(Paragraph(f"<b>{result_text}{confidence_text}</b>", result_style))
-    elements.append(Spacer(1, 0.1 * inch))
+    elements.append(Spacer(1, 0.08 * inch))  # Reduced from 0.1
 
     # Images: uploaded image and segmentation overlay (if available)
     elements.append(Paragraph("Images", heading_style))
@@ -157,9 +159,9 @@ def generate_pdf_report(report, user, prediction_result=None):
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-        ('TOPPADDING', (0, 0), (-1, -1), 12),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Reduced from 12
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),  # Reduced from 12
+        ('TOPPADDING', (0, 0), (-1, -1), 6),  # Reduced from 12
     ]))
     elements.append(model_table)
 

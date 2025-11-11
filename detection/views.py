@@ -11,8 +11,10 @@ from django.conf import settings
 from .models import UserProfile, ModelPerformance, MelasmaReport
 from .forms import ProfileForm, ImageUploadForm, RegistrationForm
 from .ml_integration import get_prediction
+# Report generation and hybrid pipeline
 from .report_generator import generate_pdf_report
 from .hybrid_pipeline import init_hybrid_models
+from . import hybrid_pipeline as hp
 # Hybrid models are initialized lazily by `hybrid_pipeline_ext` when needed to avoid
 # heavy model loading at import/startup time.
 
@@ -117,7 +119,7 @@ def dashboard_view(request):
     
     # Get statistics (using Django User model for compatibility)
     total_users = User.objects.count()
-    benign_count = MelasmaReport.objects.filter(result='Benign').count()
+    benign_count = MelasmaReport.objects.filter(result='Non-Melasma').count()
     melasma_count = MelasmaReport.objects.filter(result='Melasma Detected').count()
     normal_count = MelasmaReport.objects.filter(result='Normal Skin').count()
     
@@ -128,6 +130,12 @@ def dashboard_view(request):
     
     # Get all model metrics
     model_metrics = ModelPerformance.objects.filter(is_active=True).order_by('-accuracy')
+
+    # Last-used models (segmentation and classification)
+    last_seg_report = MelasmaReport.objects.filter(result='Segmentation Complete').order_by('-id').first()
+    last_cls_report = MelasmaReport.objects.exclude(result='Segmentation Complete').order_by('-id').first()
+    last_seg_model = last_seg_report.model_used if last_seg_report else None
+    last_cls_model = last_cls_report.model_used if last_cls_report else None
     
     context = {
         'best_model': best_model,
@@ -136,6 +144,8 @@ def dashboard_view(request):
         'melasma_count': melasma_count,
         'normal_count': normal_count,
         'last_report': last_report,
+        'last_seg_model': last_seg_model,
+        'last_cls_model': last_cls_model,
         'model_metrics': model_metrics,
         'user_email': django_user.email,
         'user_name': getattr(django_user, 'first_name', '') or django_user.username,
@@ -188,6 +198,9 @@ def detect_view(request):
     if mode not in ['segment', 'classify']:
         mode = 'segment'
     
+    # Discover available models for the dropdowns
+    seg_models, cls_models = hp.discover_models()
+
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -205,22 +218,51 @@ def detect_view(request):
             # Full filesystem path to the saved image
             full_image_path = os.path.join(settings.MEDIA_ROOT, filepath)
 
-            # Process image based on mode
+            # Determine which model (if any) user selected
+            sel_model = None
             if mode == 'segment':
+                sel_model = request.POST.get('seg_model')
                 from .hybrid_pipeline_ext import process_segmentation
-                prediction_result = process_segmentation(full_image_path)
+                # Find metrics for selected segmentation model
+                seg_metrics = None
+                for m in seg_models:
+                    if m['name'] == sel_model:
+                        seg_metrics = m.get('metrics', {})
+                        break
+                prediction_result = process_segmentation(full_image_path, model_name=sel_model)
+                if seg_metrics:
+                    prediction_result['accuracy'] = seg_metrics.get('accuracy')
+                    prediction_result['precision'] = seg_metrics.get('precision')
             else:
+                sel_model = request.POST.get('cls_model')
                 from .hybrid_pipeline_ext import process_classification
-                prediction_result = process_classification(full_image_path)
+                # Find metrics for selected classifier model
+                cls_metrics = None
+                for m in cls_models:
+                    if m['name'] == sel_model:
+                        cls_metrics = m.get('metrics', {})
+                        break
+                prediction_result = process_classification(full_image_path, model_name=sel_model)
+                if cls_metrics:
+                    prediction_result['accuracy'] = cls_metrics.get('accuracy')
+                    prediction_result['precision'] = cls_metrics.get('precision')
 
             if not prediction_result or 'error' in prediction_result:
                 messages.error(request, prediction_result.get('error', 'Error processing image. Please try again.'))
                 return redirect('detect')
 
+            # Map prediction result to standardized categories
+            result = prediction_result['result']
+            standardized_result = result
+            if result == "No Melasma":  # Check exact match for "No Melasma" first
+                standardized_result = 'Non-Melasma'
+            elif result == "Melasma" or 'Type' in result:  # Then check for Melasma or Type cases
+                standardized_result = 'Melasma Detected'
+
             # Create report
             report = MelasmaReport.objects.create(
                 user=django_user,
-                result=prediction_result['result'],
+                result=standardized_result,
                 model_used=prediction_result['model_used'],
                 accuracy=0.0,  # These could be fetched from ModelPerformance if needed
                 precision=0.0,
@@ -256,12 +298,28 @@ def detect_view(request):
                 'prediction_result': prediction_result,
                 # Provide the report id so the template can show a download button only after classification
                 'report_id': report.id if mode == 'classify' else None,
+                'seg_models': seg_models,
+                'cls_models': cls_models,
+                'selected_model': sel_model,
             }
             return render(request, 'detection/detect.html', context)
     else:
         form = ImageUploadForm()
+    # On GET, pass available models and defaults
+    selected_default = None
+    # choose defaults from BEST_* if available
+    try:
+        selected_default = hp.BEST_SEG.get('name') if mode == 'segment' and hp.BEST_SEG else None
+    except Exception:
+        selected_default = None
 
-    return render(request, 'detection/detect.html', {'form': form, 'mode': mode})
+    return render(request, 'detection/detect.html', {
+        'form': form,
+        'mode': mode,
+        'seg_models': seg_models,
+        'cls_models': cls_models,
+        'selected_model': selected_default,
+    })
 
 
 @login_required
