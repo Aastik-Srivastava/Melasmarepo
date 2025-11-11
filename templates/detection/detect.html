@@ -104,23 +104,23 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-8">
             <!-- Quick Actions (small) -->
-            <div class="mb-6 max-w-3xl mx-auto">
+            <div class="mb-8 max-w-7xl mx-auto">
                 <div class="flex gap-4">
-                    <a href="{% url 'detect' %}" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-3 hover:shadow-md transition-all flex items-center justify-between">
+                    <a href="{% url 'detect' %}" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-4 hover:shadow-md transition-all flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold">Start New Detection</div>
-                            <div class="text-xs text-purple-100">Upload an image to analyze</div>
+                            <div class="text-base font-semibold">Start New Detection</div>
+                            <div class="text-sm text-purple-100">Upload an image to analyze</div>
                         </div>
                         <div class="bg-white bg-opacity-20 p-2 rounded-lg">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
                         </div>
                     </a>
-                    <a href="{% url 'profile' %}" class="flex-1 bg-white rounded-xl p-3 hover:shadow-md transition-all border border-gray-100 flex items-center justify-between">
+                    <a href="{% url 'profile' %}" class="flex-1 bg-white rounded-xl p-4 hover:shadow-md transition-all border border-gray-100 flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold text-gray-800">View Profile</div>
-                            <div class="text-xs text-gray-500">Manage your account & history</div>
+                            <div class="text-base font-semibold text-gray-800">View Profile</div>
+                            <div class="text-sm text-gray-500">Manage your account & history</div>
                         </div>
                         <div class="bg-gray-100 p-2 rounded-lg">
                             <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
@@ -129,9 +129,9 @@
                 </div>
             </div>
 
-            <div class="max-w-3xl mx-auto">
-                <div class="bg-white rounded-lg shadow-md p-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Melasma Analysis</h2>
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8">Melasma Analysis</h2>
 
                     {% if messages %}
                         {% for message in messages %}
@@ -142,15 +142,15 @@
                     {% endif %}
 
                     <!-- Tabs -->
-                    <div class="mb-6 border-b border-gray-200">
+                    <div class="mb-8 border-b border-gray-200">
                         <ul class="flex -mb-px">
                             <li class="mr-2">
-                                <a href="?mode=segment" class="inline-block p-4 {% if mode == 'segment' %}text-purple-600 border-b-2 border-purple-600 font-semibold{% else %}text-gray-500 hover:text-gray-600{% endif %}">
+                                <a href="?mode=segment" class="inline-block p-5 text-base {% if mode == 'segment' %}text-purple-600 border-b-2 border-purple-600 font-semibold{% else %}text-gray-500 hover:text-gray-600{% endif %}">
                                     Segmentation
                                 </a>
                             </li>
                             <li>
-                                <a href="?mode=classify" class="inline-block p-4 {% if mode == 'classify' %}text-purple-600 border-b-2 border-purple-600 font-semibold{% else %}text-gray-500 hover:text-gray-600{% endif %}">
+                                <a href="?mode=classify" class="inline-block p-5 text-base {% if mode == 'classify' %}text-purple-600 border-b-2 border-purple-600 font-semibold{% else %}text-gray-500 hover:text-gray-600{% endif %}">
                                     Classification
                                 </a>
                             </li>
@@ -158,30 +158,30 @@
                     </div>
 
                     <!-- Tab Content -->
-                    <div class="mb-8">
+                    <div class="mb-10">
                         {% if mode == 'segment' %}
-                        <p class="text-gray-600 mb-4">Upload an image to identify and highlight potential melasma regions using our segmentation model.</p>
+                        <p class="text-gray-600 text-lg mb-4">Upload an image to identify and highlight potential melasma regions using our segmentation model.</p>
                         {% else %}
-                        <p class="text-gray-600 mb-4">Upload an image to classify skin condition and get a detailed analysis report.</p>
+                        <p class="text-gray-600 text-lg mb-4">Upload an image to classify skin condition and get a detailed analysis report.</p>
                         {% endif %}
                     </div>
 
                     <!-- Upload Form -->
-                    <form method="post" enctype="multipart/form-data" class="space-y-6" id="uploadForm">
+                    <form method="post" enctype="multipart/form-data" class="space-y-8" id="uploadForm">
                         {% csrf_token %}
                         <input type="hidden" name="mode" value="{{ mode }}">
                         <!-- Model selection dropdown -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Choose Model</label>
+                            <label class="block text-base font-medium text-gray-700 mb-3">Choose Model</label>
                             {% if mode == 'segment' %}
-                                <select name="seg_model" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
+                                <select name="seg_model" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-base p-3">
                                     <option value="" {% if not selected_model %}selected{% endif %}>Default (best)</option>
                                     {% for m in seg_models %}
                                         <option value="{{ m.name }}" {% if selected_model == m.name %}selected{% endif %}>{{ m.name }}</option>
                                     {% endfor %}
                                 </select>
                             {% else %}
-                                <select name="cls_model" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
+                                <select name="cls_model" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-base p-3">
                                     <option value="" {% if not selected_model %}selected{% endif %}>Default (best)</option>
                                     {% for m in cls_models %}
                                         <option value="{{ m.name }}" {% if selected_model == m.name %}selected{% endif %}>{{ m.name }}</option>
@@ -191,22 +191,22 @@
                         </div>
 
                         <div>
-                            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="{{ form.image.id_for_label }}" class="block text-base font-medium text-gray-700 mb-3">
                                 Select Image (JPG/PNG)
                             </label>
-                            <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-purple-400 transition cursor-pointer" id="dropZone">
-                                <div class="space-y-1 text-center" id="uploadPrompt">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <div class="mt-2 flex justify-center px-8 pt-8 pb-8 border-2 border-gray-300 border-dashed rounded-lg hover:border-purple-400 transition cursor-pointer" id="dropZone">
+                                <div class="space-y-2 text-center" id="uploadPrompt">
+                                    <svg class="mx-auto h-16 w-16 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <div class="flex text-sm text-gray-600">
+                                    <div class="flex text-base text-gray-600">
                                         <label for="{{ form.image.id_for_label }}" class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500">
                                             <span>Upload a file</span>
                                             {{ form.image }}
                                         </label>
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+                                    <p class="text-sm text-gray-500">PNG, JPG up to 10MB</p>
                                 </div>
                                 <!-- Image Preview (initially hidden) -->
                                 <div id="imagePreview" class="hidden w-full">
@@ -219,9 +219,9 @@
                         </div>
 
                         <!-- Process Button (initially hidden) -->
-                        <div class="pt-4 hidden" id="processButtonContainer">
+                        <div class="pt-6 hidden" id="processButtonContainer">
                             <button type="submit"
-                                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200">
+                                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200">
                                 {% if mode == 'segment' %}
                                 Run Segmentation
                                 {% else %}
@@ -232,36 +232,52 @@
                     </form>
 
                     {% if uploaded_image_url or overlay_url %}
-                    <div class="mt-8 border-t border-gray-200 pt-8">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Results</h3>
+                    <div class="mt-10 border-t border-gray-200 pt-10">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-8">Results</h3>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {% if uploaded_image_url %}
                             <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">Original Image</h4>
+                                <h4 class="text-base font-medium text-gray-700 mb-3">Original Image</h4>
                                 <img src="{{ uploaded_image_url }}" alt="Original" class="w-full rounded-lg shadow-sm">
                             </div>
                             {% endif %}
-                            
+
+                            {% if ground_truth_mask_url %}
+                            <div>
+                                <h4 class="text-base font-medium text-gray-700 mb-3">Ground Truth Mask</h4>
+                                <img src="{{ ground_truth_mask_url }}" alt="Ground Truth Mask" class="w-full rounded-lg shadow-sm">
+                            </div>
+                            {% endif %}
+
+                            {% if predicted_mask_url %}
+                            <div>
+                                <h4 class="text-base font-medium text-gray-700 mb-3">Predicted Mask</h4>
+                                <img src="{{ predicted_mask_url }}" alt="Predicted Mask" class="w-full rounded-lg shadow-sm">
+                            </div>
+                            {% endif %}
+
                             {% if overlay_url %}
                             <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">Segmentation Result</h4>
-                                <img src="{{ overlay_url }}" alt="Segmentation" class="w-full rounded-lg shadow-sm">
+                                <h4 class="text-base font-medium text-gray-700 mb-3">Segmentation Overlay</h4>
+                                <img src="{{ overlay_url }}" alt="Segmentation Overlay" class="w-full rounded-lg shadow-sm">
                             </div>
                             {% endif %}
 
                             {% if prediction_result %}
-                            <div class="md:col-span-2 mt-4">
-                                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-100 shadow-lg">
-                                    <h4 class="text-xl font-bold text-gray-900 mb-4">Analysis Results</h4>
-                                    <div class="flex items-center justify-between mb-4">
+                            <div class="md:col-span-2 mt-6">
+                                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-8 border border-purple-100 shadow-lg">
+                                    <h4 class="text-2xl font-bold text-gray-900 mb-6">Analysis Results</h4>
+                                    <div class="flex items-center justify-between mb-6">
                                         <div class="flex-1">
-                                            <div class="text-3xl font-bold {% if 'non-melasma' in prediction_result.result|lower %}text-green-600{% else %}text-purple-600{% endif %}">
+                                            <div class="text-4xl font-bold {% if 'non-melasma' in prediction_result.result|lower %}text-green-600{% else %}text-purple-600{% endif %}">
                                                 {{ prediction_result.result }}
                                             </div>
-                                            {% if prediction_result.confidence %}
-                                            <div class="text-lg text-gray-600 mt-2">
-                                                Confidence: <span class="font-semibold">{{ prediction_result.confidence|floatformat:2 }}%</span>
+                                            {% if prediction_result.accuracy or prediction_result.precision %}
+                                            <div class="text-xl text-gray-600 mt-3">
+                                                Accuracy: <span class="font-semibold">{{ prediction_result.accuracy|floatformat:2 }}</span>
+                                                &nbsp;|&nbsp;
+                                                Precision: <span class="font-semibold">{{ prediction_result.precision|floatformat:2 }}</span>
                                             </div>
                                             {% endif %}
                                         </div>

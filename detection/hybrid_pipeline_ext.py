@@ -36,12 +36,45 @@ def process_segmentation(image_path, model_name=None):
         mask_u8 = hp.run_segmentation(model, image, device=hp.DEVICE, img_size=256)
         overlay = hp.overlay_mask(image, mask_u8, color=(0, 255, 0), alpha=0.35)
 
-        # Save overlay
+        # Save overlay and predicted mask
         overlays_dir = os.path.join(settings.MEDIA_ROOT, 'reports')
         os.makedirs(overlays_dir, exist_ok=True)
-        overlay_name = os.path.splitext(os.path.basename(image_path))[0] + '_overlay.jpg'
+        base_name = os.path.splitext(os.path.basename(image_path))[0]
+        
+        # Save overlay
+        overlay_name = base_name + '_overlay.jpg'
         overlay_path = os.path.join(overlays_dir, overlay_name)
         overlay.save(overlay_path, format='JPEG', quality=92)
+        
+        # Save predicted mask (grayscale)
+        pred_mask_name = base_name + '_predicted_mask.png'
+        pred_mask_path = os.path.join(overlays_dir, pred_mask_name)
+        Image.fromarray(mask_u8).save(pred_mask_path)
+        
+        # Check for ground truth mask (only exists for validation/test images)
+        # Try common naming patterns from notebooks: {name}_mask.png, {name}_gt.png
+        possible_gt_names = [
+            base_name + '_mask.png',
+            base_name + '_gt.png',
+            base_name.replace('_result', '') + '_mask.png',  # handle result suffix
+        ]
+        gt_mask_path = None
+        # Look in masks directory or same directory as image
+        search_dirs = [
+            os.path.join(settings.MEDIA_ROOT, 'masks'),
+            os.path.dirname(image_path),
+            overlays_dir,
+        ]
+        for search_dir in search_dirs:
+            if not os.path.exists(search_dir):
+                continue
+            for gt_name in possible_gt_names:
+                potential_gt = os.path.join(search_dir, gt_name)
+                if os.path.exists(potential_gt):
+                    gt_mask_path = potential_gt
+                    break
+            if gt_mask_path:
+                break
 
         # Calculate affected area percentage
         total_pixels = mask_u8.size
@@ -51,6 +84,8 @@ def process_segmentation(image_path, model_name=None):
         return {
             'result': 'Segmentation Complete',
             'overlay_path': overlay_path,
+            'ground_truth_mask_path': gt_mask_path,  # May be None for new uploads
+            'predicted_mask_path': pred_mask_path,
             'model_used': (model_name or (hp.BEST_SEG.get('name') if hp.BEST_SEG else 'Unknown')),
             'affected_percentage': affected_percentage,
             'confidence': None  # No confidence score for segmentation

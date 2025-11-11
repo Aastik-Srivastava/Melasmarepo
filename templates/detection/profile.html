@@ -104,23 +104,23 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-8">
             <!-- Quick Actions (small) -->
-            <div class="mb-6 max-w-2xl mx-auto">
+            <div class="mb-8 max-w-6xl mx-auto">
                 <div class="flex gap-4">
-                    <a href="{% url 'detect' %}" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-3 hover:shadow-md transition-all flex items-center justify-between">
+                    <a href="{% url 'detect' %}" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-4 hover:shadow-md transition-all flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold">Start Detection</div>
-                            <div class="text-xs text-purple-100">Run a new analysis</div>
+                            <div class="text-base font-semibold">Start Detection</div>
+                            <div class="text-sm text-purple-100">Run a new analysis</div>
                         </div>
                         <div class="bg-white bg-opacity-20 p-2 rounded-lg">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
                         </div>
                     </a>
-                    <a href="{% url 'dashboard' %}" class="flex-1 bg-white rounded-xl p-3 hover:shadow-md transition-all border border-gray-100 flex items-center justify-between">
+                    <a href="{% url 'dashboard' %}" class="flex-1 bg-white rounded-xl p-4 hover:shadow-md transition-all border border-gray-100 flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold text-gray-800">Dashboard</div>
-                            <div class="text-xs text-gray-500">Overview & metrics</div>
+                            <div class="text-base font-semibold text-gray-800">Dashboard</div>
+                            <div class="text-sm text-gray-500">Overview & metrics</div>
                         </div>
                         <div class="bg-gray-100 p-2 rounded-lg">
                             <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/></svg>
@@ -129,9 +129,9 @@
                 </div>
             </div>
 
-            <div class="max-w-2xl mx-auto">
-                <div class="bg-white rounded-lg shadow-md p-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Profile</h2>
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8">Edit Profile</h2>
 
                     {% if messages %}
                         {% for message in messages %}
@@ -141,35 +141,35 @@
                         {% endfor %}
                     {% endif %}
 
-                    <form method="post" class="space-y-6">
+                    <form method="post" class="space-y-8">
                         {% csrf_token %}
                         
                         <div>
-                            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <label for="{{ form.name.id_for_label }}" class="block text-base font-medium text-gray-700 mb-3">Full Name</label>
                             {{ form.name }}
                         </div>
 
                         <div>
-                            <label for="{{ form.gender.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                            <label for="{{ form.gender.id_for_label }}" class="block text-base font-medium text-gray-700 mb-3">Gender</label>
                             {{ form.gender }}
                         </div>
 
                         <div>
-                            <label for="{{ form.date_of_birth.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                            <label for="{{ form.date_of_birth.id_for_label }}" class="block text-base font-medium text-gray-700 mb-3">Date of Birth</label>
                             {{ form.date_of_birth }}
                         </div>
 
-                        <div class="pt-4">
+                        <div class="pt-6">
                             <button type="submit"
-                                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200">
+                                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200">
                                 Update Profile
                             </button>
                         </div>
                     </form>
 
-                    <div class="mt-8 pt-8 border-t border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
-                        <div class="space-y-2 text-sm">
+                    <div class="mt-10 pt-10 border-t border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">Account Information</h3>
+                        <div class="space-y-3 text-base">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Username:</span>
                                 <span class="font-semibold">{{ user.username }}</span>
@@ -195,10 +195,11 @@
     input[type="date"],
     select {
         width: 100%;
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.25rem;
         border: 1px solid #d1d5db;
         border-radius: 0.5rem;
         transition: all 0.2s;
+        font-size: 1rem;
     }
     input:focus,
     select:focus {

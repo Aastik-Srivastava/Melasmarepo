@@ -101,16 +101,21 @@ def generate_pdf_report(report, user, prediction_result=None):
     elements.append(patient_table)
     elements.append(Spacer(1, 0.15 * inch))
 
-    # Detection result and confidence
+    # Detection result and metrics
     elements.append(Paragraph("Detection Result", heading_style))
     result_text = report.result
-    confidence_text = ''
-    if prediction_result and prediction_result.get('confidence') is not None:
+    # Use model metrics if report accuracy/precision are 0
+    accuracy = report.accuracy
+    precision = report.precision
+    if (accuracy == 0 or precision == 0) and hasattr(report, 'model_used'):
+        from detection.models import ModelPerformance
         try:
-            confidence_text = f" (Confidence: {prediction_result['confidence']:.2f}%)"
+            model_perf = ModelPerformance.objects.get(model_name=report.model_used)
+            accuracy = model_perf.accuracy
+            precision = model_perf.precision
         except Exception:
-            confidence_text = f" (Confidence: {prediction_result.get('confidence')})"
-
+            pass
+    metrics_text = f" (Accuracy: {accuracy:.2f}, Precision: {precision:.2f})"
     result_style = ParagraphStyle(
         'Result',
         parent=styles['Heading2'],
@@ -118,7 +123,7 @@ def generate_pdf_report(report, user, prediction_result=None):
         textColor=colors.black,
         spaceAfter=8,  # Reduced from 12
     )
-    elements.append(Paragraph(f"<b>{result_text}{confidence_text}</b>", result_style))
+    elements.append(Paragraph(f"<b>{result_text}{metrics_text}</b>", result_style))
     elements.append(Spacer(1, 0.08 * inch))  # Reduced from 0.1
 
     # Images: uploaded image and segmentation overlay (if available)
